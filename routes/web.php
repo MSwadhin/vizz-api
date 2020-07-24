@@ -12,5 +12,35 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return "Why You Are Here???";
 });
+
+
+
+
+
+
+$router->group(
+    ['prefix'=>'auth'],
+    function () use ($router){
+        $router->post('login','AuthController@login');
+        $router->get('logout','AuthController@logout');
+    }
+);
+
+
+
+/*
+    Media Controller 
+*/
+// $router->resourc
+
+$router->group(
+    ['prefix' => 'media'],
+    function () use ($router){
+        $router->get('all','MediaController@index');
+        $router->get('show','MediaController@show');
+        $router->post('add','MediaController@store');
+        $router->post('upadte','MediaController@update');
+    }
+);

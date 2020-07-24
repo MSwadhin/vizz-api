@@ -21,9 +21,9 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -61,9 +61,18 @@ $app->singleton(
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+
+$app->middleware([
+    App\Http\Middleware\CORSMiddleware::class
+]);
+
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -77,8 +86,28 @@ $app->singleton(
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+
+// Authentication
+$app->register(App\Providers\AuthServiceProvider::class);
+
+// Authentication With JWT
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+
+// Form Request
+$app->register(Urameshibr\Providers\FormRequestServiceProvider::class);
+
+// For Artisan Commands
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+
+// Tinker
+$app->register(Laravel\Tinker\TinkerServiceProvider::class);
+
+
 // $app->register(App\Providers\EventServiceProvider::class);
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
