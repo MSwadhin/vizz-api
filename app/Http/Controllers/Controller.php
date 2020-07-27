@@ -45,7 +45,10 @@ class Controller extends BaseController
         return $this->responseService->success("Success");
     }
 
-    protected function sendFailure($statusCode){
-        return $this->responseService->fail("Request Failed",$statusCode);
+    protected function sendFailure($statusCode,$data=false){
+        if( !$data ){
+            return $this->responseService->fail("Request Failed",$statusCode);
+        }
+        return $this->responseService->failWithData("Request Failed",$statusCode,$data);
     }
 }

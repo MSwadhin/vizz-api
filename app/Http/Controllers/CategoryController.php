@@ -27,7 +27,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $cats = Category::where('trashed',0)->get();
+        $cats = Category::where('trashed',0)->orderBy('id','desc')->get();
         return $this->sendSuccess($cats);
     }
 
@@ -109,7 +109,7 @@ class CategoryController extends Controller
     }
 
     public function clearTrash(){
-        $cats = Category::where('trashed',1)->get();
+        $cats = Category::where('trashed',1)->orderBy('id','desc')->get();
         foreach($cats as $cat){
             Category::destroy($cat->id);
         }

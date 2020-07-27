@@ -64,7 +64,7 @@ class MediaController extends Controller
     */
     public function index()
     {
-        $allMedia = Media::where('trashed',0)->get();
+        $allMedia = Media::where('trashed',0)->orderBy('id','desc')->get();
         return $this->utilityService->is200ResponseWithData("Success",$allMedia);
         return $this->sendSuccess($allMedia);
     }
@@ -106,8 +106,8 @@ class MediaController extends Controller
     {
         $media = Media::find($id);
         if( empty($media) )
-            return $this->utilityService->is422Response("File Not Found!");
-        return $this->utilityService->is200ResponseWithData("Success",$media);
+            return $this->sendFailure(404);
+        return $this->sendSuccess($media);
     }
 
 
@@ -132,11 +132,11 @@ class MediaController extends Controller
     {
         $media = Media::find($id);
         if( empty($media) ){
-            return $this->utilityService->is422Response("File Not Found!");
+            return $this->sendFailure(404);;
         }
         $media->trashed = 1;
         $media->save();
-        return $this->utilityService->is200Response("Deleted Successfully!");
+        return $this->sendSuccess();
     }
 
 
@@ -144,18 +144,18 @@ class MediaController extends Controller
     public function restore($id){
         $media = Media::find($id);
         if( empty($media) ){
-            return $this->utilityService->is422Response("Media Not Found in Trash!");
+            return $this->sendFailure(404);
         }
         $media->trashed = 0;
         $media->save();
-        return $this->utilityService->is200Response("Successfully Restored");
+        return $this->sendSuccess();
     }
 
 
     // gets files which are in trash
     public function get_trash( Request $request ){
-        $media = Media::where('trashed',1)->get();
-        return $this->utilityService->is200ResponseWithData("Success",$media);
+        $media = Media::where('trashed',1)->orderBy('id','desc')->get();
+        return $this->sendSuccess($media);
     }
 
 
@@ -173,7 +173,7 @@ class MediaController extends Controller
                 array_push($uploadedIds,$cid);
             }
         }
-        return $this->utilityService->is200ResponseWithData("Successfully Uploaded",[
+        return $this->sendSuccess([
             'Uploaded' => $suc,
             'Failed' => $fail,
             'ids' => $uploadedIds
@@ -195,7 +195,7 @@ class MediaController extends Controller
                 else $fail++;
             }
         }
-        return $this->utilityService->is200ResponseWithData("Success",[
+        return $this->sendSuccess([
             'Falis ' => $fail
         ]);
     }

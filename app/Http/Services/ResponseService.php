@@ -45,6 +45,18 @@
         ));      
     }
 
+    public function failWithData($responseMessage,$statusCode,$data)
+    {
+        throw new HttpResponseException(response()->json(
+            [
+                "success"=>false,
+                "message"=>$responseMessage,
+                "errors"=>$data
+            ], 
+            $statusCode
+        ));      
+    }
+
 
     public function hash_password($password)
     {

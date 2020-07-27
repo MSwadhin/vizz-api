@@ -57,9 +57,45 @@ $router->group(
         $router->post('update/{id}','CategoryController@update');
         $router->post('trash/{id}','CategoryController@trash');
         $router->post('restore/{id}','CategoryController@restore');
-        // $router->post('delete/{id}','CategoryController@destroy');
+        $router->post('delete/{id}','CategoryController@destroy');
         $router->get('getTrash','CategoryController@getTrash');
         $router->post('clearTrash','CategoryController@clearTrash');
+    }
+);
+
+
+
+/**
+ * 
+ * Slider Routes
+ */
+$router->group(
+    ['prefix'=>'slider'],
+    function() use ($router){
+        $router->get('all','SliderController@index');
+        $router->get('show/{id}','SliderController@show');
+        $router->post('create','SliderController@store');
+        $router->post('update/{id}','SliderController@update');
+        $router->post('trash/{id}','SliderController@trash');
+        $router->post('restore/{id}','SliderController@restore');
+        $router->post('delete/{id}','SliderController@destroy');
+        $router->get('getTrash','SliderController@getTrash');
+        $router->post('clearTrash','SliderController@clearTrash');
+    }
+);
+
+/**
+ * 
+ * Slide Routes
+ */
+$router->group(
+    ['prefix'=>'slide'],
+    function() use ($router){
+        $router->get('all','SlideController@index');
+        $router->get('show/{id}','SlideController@show');
+        $router->post('create','SlideController@store');
+        $router->post('update/{id}','SlideController@update');
+        $router->post('delete/{id}','SlideController@destroy');
     }
 );
 
