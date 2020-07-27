@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkFileUploadRequest;
 use Illuminate\Http\Request;
 use App\Media;
-use App\Http\Services\UtilityService;
 use App\Http\Requests\FileUploadRequest;
+use Urameshibr\Requests\FormRequest;
 
 class MediaController extends Controller
 {
@@ -15,19 +16,18 @@ class MediaController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    protected $utilityService;
-
     public function __construct()
     {
         parent::__construct(
-            ['index','show','store']
+            ['index','show']
         );
     }
 
-
-    /*
-        Utility Methods 
-    */
+    /* 
+    *
+    * Utility Functions
+    *
+    */ 
     private function getFileType( $fileExtension ){
         if( $fileExtension=="jpg" )return "image";
         if( $fileExtension=="jpeg" )return "image";
@@ -37,87 +37,166 @@ class MediaController extends Controller
         if( $fileExtension=="ps" )return "image";
         return "doc";
     }
+    private function uploadFile($file,$type){
 
-
-    public function index()
-    {
-        
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(FileUploadRequest $request)
-    {
-        $file = $request->file('file');
-        $name = $request->name;
-        $title = $request->titile;
-        $alt = $request->alt;
         $path = base_path().'/public/uploads';
-
-        if( $name =="" or !isset($name) ){
-            $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);;
-        }
-        if( $title="" or !isset($title) ) {
-            $title = "Vizz Arch";
-        }
-
+        $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);;
         $media = new Media;
         $media->name = $name;
         $media->title = $name;
+        $fileNewName = $name . "_" . time() . "_" .time() . "." . $file->getClientOriginalExtension();
+        $media->path = '/uploads/' . $fileNewName;
+        $media->type = $type;
+
+        if( $file->move( $path,$fileNewName ) ){
+            $media->save();
+            return $media->id;
+        }
+        return false;
+    }
+
+    
+
+    /*
+    *
+    * Route Methods
+    *
+    */
+    public function index()
+    {
+        $allMedia = Media::where('trashed',0)->get();
+        return $this->utilityService->is200ResponseWithData("Success",$allMedia);
+        return $this->sendSuccess($allMedia);
+    }
+
+
+
+    public function store(FileUploadRequest $request)
+    {
+        $file = $request['file'];
+        $name = $request->has('name') ? $request->name : "";
+        $title = $request->has('title') ? $request->title : "";
+        $alt = $request->has('alt') ? $request->alt : "";
+        $path = base_path().'/public/uploads';
+        if( $name =="" or !isset($name) ){
+            $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);;
+        }
+        $media = new Media;
+        $media->name = $name;
+        $media->title = $title;
         $media->alt = $alt;
-        $fileNewName = time() . "." . $file->getClientOriginalExtension();
-        $media->path = $path . "/" . $fileNewName;
+        $fileNewName = $name . "_" . time() . "_" .time() . "." . $file->getClientOriginalExtension();
+        $media->path = '/uploads/' . $fileNewName;
         $media->type = $this->getFileType($file->getClientOriginalExtension());
         
         if( $file->move($path,$fileNewName) ){
-
             if( $media->save() ){
-                
                 return $this->utilityService->is200ResponseWithData(
-                    "Success",
+                    "Successfully Uploaded File!",
                     $media
                 );
             }
-            return $this->utilityService->is500Response("DB Failed");
+            return $this->utilityService->is500Response("Internal Server Error!");
         }
-        return $this->utilityService->is500Response("Upload  Failed");
+        return $this->utilityService->is500Response("Upload Failed!");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        //
+        $media = Media::find($id);
+        if( empty($media) )
+            return $this->utilityService->is422Response("File Not Found!");
+        return $this->utilityService->is200ResponseWithData("Success",$media);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    // takes name,titile,alt for a file
+    public function update($id,Request $request)
     {
-        //
+        $media = Media::find($id);
+        if( !empty($media) ){
+            $media->name = $request->name;
+            $media->title = $request->title;
+            $media->alt = $request->alt;
+            $media->save();
+            return $this->utilityService->is200Response("Saved!");
+        }
+        return $this->utilityService->is422Response("File Not Found");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+    
+    // Moves to trash
     public function destroy($id)
     {
-        //
+        $media = Media::find($id);
+        if( empty($media) ){
+            return $this->utilityService->is422Response("File Not Found!");
+        }
+        $media->trashed = 1;
+        $media->save();
+        return $this->utilityService->is200Response("Deleted Successfully!");
+    }
+
+
+    // restores any media from trash
+    public function restore($id){
+        $media = Media::find($id);
+        if( empty($media) ){
+            return $this->utilityService->is422Response("Media Not Found in Trash!");
+        }
+        $media->trashed = 0;
+        $media->save();
+        return $this->utilityService->is200Response("Successfully Restored");
+    }
+
+
+    // gets files which are in trash
+    public function get_trash( Request $request ){
+        $media = Media::where('trashed',1)->get();
+        return $this->utilityService->is200ResponseWithData("Success",$media);
+    }
+
+
+    public function bulkUpload(BulkFileUploadRequest $request){
+        $suc = 0;
+        $fail=0;
+        $uploadedIds = [];
+        foreach( $request->files as $file){
+            $type = $this->getFileType($file->getClientOriginalExtension());
+            if( !$cid = $this->uploadFile($file,$type) ){
+                $fail++;
+            }
+            else {
+                $suc++;
+                array_push($uploadedIds,$cid);
+            }
+        }
+        return $this->utilityService->is200ResponseWithData("Successfully Uploaded",[
+            'Uploaded' => $suc,
+            'Failed' => $fail,
+            'ids' => $uploadedIds
+        ]);
+    }
+
+
+    // clears the trash and deletes all trashed files from uploads folder
+    public function clearTrash(){
+        $trashbin = Media::where('trashed',true)->get();
+        $fail = 0;
+        $suc = 0;
+        if( !empty($trashbin) && count($trashbin)>0 ){
+            foreach($trashbin as $media){
+                if( unlink( $media->path ) ){
+                    Media::destroy($media->id);
+                    $suc++;
+                }
+                else $fail++;
+            }
+        }
+        return $this->utilityService->is200ResponseWithData("Success",[
+            'Falis ' => $fail
+        ]);
     }
 }

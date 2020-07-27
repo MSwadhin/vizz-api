@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\UtilityService;
+use App\Http\Services\ResponseService;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
@@ -10,6 +12,7 @@ class Controller extends BaseController
 {
 
     protected $utilityService;
+    protected $responseService;
 
     public function __construct($publicRoutes)
     {
@@ -20,6 +23,7 @@ class Controller extends BaseController
             ]
         );
         $this->utilityService = new UtilityService;
+        $this->responseService = new ResponseService;
     }
     
     //
@@ -29,7 +33,19 @@ class Controller extends BaseController
             'success'=> true,
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 600,
+            'expires_in' => Auth::factory()->getTTL(),
         ], 200);
+    }
+
+
+    protected function sendSuccess($data=false){
+        if( $data ){
+            return $this->responseService->successWithData("Success",$data);
+        }
+        return $this->responseService->success("Success");
+    }
+
+    protected function sendFailure($statusCode){
+        return $this->responseService->fail("Request Failed",$statusCode);
     }
 }

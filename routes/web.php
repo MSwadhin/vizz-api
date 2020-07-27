@@ -1,15 +1,6 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
-|
-*/
+
 
 $router->get('/', function () use ($router) {
     return "Why You Are Here???";
@@ -17,9 +8,10 @@ $router->get('/', function () use ($router) {
 
 
 
-
-
-
+/*
+*
+* Auth Routes
+*/
 $router->group(
     ['prefix'=>'auth'],
     function () use ($router){
@@ -31,16 +23,43 @@ $router->group(
 
 
 /*
-    Media Controller 
+*
+*Media Routes 
 */
-// $router->resourc
-
 $router->group(
     ['prefix' => 'media'],
     function () use ($router){
         $router->get('all','MediaController@index');
-        $router->get('show','MediaController@show');
-        $router->post('add','MediaController@store');
-        $router->post('upadte','MediaController@update');
+        $router->get('show/{id}','MediaController@show');
+        // $router->get('show/{id}',[ 'as'=>'show', 'uses'=>'MediaController@show' ]);
+        $router->post('upload','MediaController@store');
+        $router->post('update/{id}','MediaController@update');
+        $router->post('trash/{id}','MediaController@destroy');
+        $router->get('gettrash','MediaController@get_trash');
+        $router->post('bulkUpload','MediaController@bulkUpload');
+        $router->post('clearTrash','MediaController@clearTrash');
+        $router->post('bulkRestore/{ids}','MediaController@restore2');
     }
 );
+
+
+
+/*
+*
+* Category Routes
+*/
+$router->group(
+    ['prefix'=>'category'],
+    function() use ($router){
+        $router->get('all','CategoryController@index');
+        $router->get('show/{id}','CategoryController@show');
+        $router->post('create','CategoryController@store');
+        $router->post('update/{id}','CategoryController@update');
+        $router->post('trash/{id}','CategoryController@trash');
+        $router->post('restore/{id}','CategoryController@restore');
+        // $router->post('delete/{id}','CategoryController@destroy');
+        $router->get('getTrash','CategoryController@getTrash');
+        $router->post('clearTrash','CategoryController@clearTrash');
+    }
+);
+

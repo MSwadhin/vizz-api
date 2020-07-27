@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-// use App\Http\Services\UtilityService;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserLoginRequest;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
