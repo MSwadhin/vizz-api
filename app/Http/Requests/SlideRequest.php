@@ -17,7 +17,7 @@ class SlideRequest extends FormRequest{
     public function rules()
     {
         return [
-            'name'=>'required|max:200|unique:slides',
+            'name'=>'required|max:200',
             'media_id'=>'required|integer|exists:media,id',
             'slider_id'=>'required|integer|exists:sliders,id'
         ];

@@ -18,7 +18,7 @@ class CategoryRequest extends FormRequest{
     {
         return [
             // 'file'=>'required|mimes:doc,docx,pdf,txt,jpg,png,jpeg,ai,ps,svg|max:20600',
-            'name'=>'required|max:200|unique:categories'
+            'name'=>'required|max:200'
         ];
     }
 

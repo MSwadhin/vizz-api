@@ -18,6 +18,7 @@ class CreateTeamMembersTable extends Migration
             $table->string('name');
             $table->string('designation');
             $table->unsignedBigInteger('media_id');
+            $table->integer('order')->default(100000);
             $table->string('facebook',500)->nullable();
             $table->string('twitter',500)->nullable();
             $table->string('instagram',500)->nullable();

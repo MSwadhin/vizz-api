@@ -17,7 +17,7 @@ class TeamMemberRequest extends FormRequest{
     public function rules()
     {
         return [
-            'name'=>'required|max:200|unique:team_members',
+            'name'=>'required|max:200',
             'designation'=>'required|max:200',
             'media_id' => 'required|exists:media,id'
         ];

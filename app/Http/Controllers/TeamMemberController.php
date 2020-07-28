@@ -22,6 +22,7 @@ class TeamMemberController extends Controller
         $member->name = $request->name;
         $member->designation = $request->designation;
         $member->media_id = $request->media_id;
+        $member->order = ( $request->has('order') && is_int($request->order)) ? $request->order : 100000;
         $member->facebook = ( $request->has('facebook') ) ? $request->facebook : "";
         $member->twitter = ( $request->has('twitter') ) ? $request->facebook : "";
         $member->linkedin = ( $request->has('linkedin') ) ? $request->facebook : "";
@@ -56,6 +57,13 @@ class TeamMemberController extends Controller
     {
         $newMember = new TeamMember;
         $this->getTeamMember($newMember,$request);
+        if( TeamMember::where('name',$newMember->name)->count() > 0 ){
+            return $this->sendFailure(
+                422,[
+                    'name' => 'Team Member Name Already Exists'
+                ]
+            );
+        }
         $newMember->save();
         $newMember['media'] = $this->mediaService->getMediaFilteredById($newMember->media_id);
         return $this->sendSuccess($newMember);
@@ -84,12 +92,20 @@ class TeamMemberController extends Controller
      */
     public function update(TeamMemberRequest $request, $id)
     {
+        
         $member = TeamMember::find($id);
         if( empty($member) || $member==null )return $this->sendFailure(404);
-        $this->getTeamMember($member,$request);
-        $member->save();
-        $member['media'] = $this->mediaService->getMediaFilteredById($member->media_id);
-        return $this->sendSuccess($member);
+        $cnt = TeamMember::where('id','!=',$id)->where('name',$request->name)->count();
+        if( $cnt==0 ){
+            $this->getTeamMember($member,$request);
+            $member->save();
+            $member['media'] = $this->mediaService->getMediaFilteredById($member->media_id);
+            return $this->sendSuccess($member);
+        }
+        return $this->sendFailure(422,[
+            'name'=>'Team Member Name Already Exists!'
+        ]);
+
     }
 
     /**

@@ -27,7 +27,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $cats = Category::where('trashed',0)->orderBy('id','desc')->get();
+        $cats = Category::where('trashed',0)->orderBy('name','asc')->get();
         return $this->sendSuccess($cats);
     }
 
@@ -43,11 +43,17 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CategoryRequest $request)
-    {   $category = new Category;
+    {   
+        if( Category::where('name',$request->name)->count() > 0 ){
+            return $this->sendFailure(422,[
+                'name' => 'Category Name Already Exists!'
+            ]);
+        }
+        $category = new Category;
         $category->name = $request->name;
         $category->parent = $request->has('parent') ? $request->parent : 0;
         $category->save();
-        return $this->sendSuccess();
+        return $this->sendSuccess($category);
     }
 
     /**
@@ -74,11 +80,20 @@ class CategoryController extends Controller
     {   
         
         $category = Category::find( $id );
+        $cnt = Category::where('id','!=',$id)->where('name',$request->name)->count();
+        if( $cnt>0 ){
+            return $this->sendFailure(
+                422,[
+                    'name' => 'Category Name Already Exists!'
+                ]
+            );
+        }
+
         if( empty($category) )return $this->sendFailure(404);
         $category->name = $request->name;
         $category->parent = $request->has('parent') ? $request->parent : 0;
         $category->save();
-        return $this->sendSuccess();
+        return $this->sendSuccess($category);
     }
 
     public function trash($id)
@@ -109,7 +124,7 @@ class CategoryController extends Controller
     }
 
     public function clearTrash(){
-        $cats = Category::where('trashed',1)->orderBy('id','desc')->get();
+        $cats = Category::where('trashed',1)->orderBy('name','asc')->get();
         foreach($cats as $cat){
             Category::destroy($cat->id);
         }

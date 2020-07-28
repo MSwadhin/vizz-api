@@ -24,7 +24,7 @@ class SlideController extends Controller
 
     public function index()
     {
-        $slides = Slide::orderBy('id','desc')->get();
+        $slides = Slide::orderBy('order','asc')->orderBy('id','desc')->get();
         return $this->sendSuccess($slides);
 
     }
@@ -41,8 +41,12 @@ class SlideController extends Controller
         $slide->name = $request->name;
         $slide->slider_id = $request->slider_id;
         $slide->media_id = $request->media_id;
+        if( $request->has('order')  && is_int($request->order) ){
+            $slide->order = $request->order;
+        }
         $slide->save();
-        return $this->sendSuccess();
+        $slide['media'] = $this->mediaService->getMediaFilteredById($slide->media_id);
+        return $this->sendSuccess($slide);
     }
 
     /**
@@ -75,8 +79,14 @@ class SlideController extends Controller
         $slide->name = $request->name;
         $slide->slider_id = $request->slider_id;
         $slide->media_id = $request->media_id;
+        if( $request->has('order') && is_int($request->order) ){
+            $slide->order = $request->order;
+        }
+        else $slide->order = 100000;
+
         $slide->save();
-        return $this->sendSuccess();
+        $slide['media'] = $this->mediaService->getMediaFilteredById($slide->media_id);
+        return $this->sendSuccess($slide);
     }
 
     /**

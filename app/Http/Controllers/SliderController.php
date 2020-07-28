@@ -27,12 +27,16 @@ class SliderController extends Controller
     public function show($id){
         $slider = Slider::find($id);
         if( empty($slider) )return $this->sendFailure(404);
-        $slider['slides'] = $slider->slides();
-        // return response()->json($slider['slides']);
-        if( is_array($slider['slides']) )
-        foreach($slider['slides'] as $slide) {
-            $slide['media'] = $this->mediaService->getMediaFilteredById($slide->media_id);
-        }
+        $slider['slides'] = Slide::where('slider_id',$id)
+                                    ->orderBy('order','asc')
+                                    ->orderBy('id','desc')
+                                    ->get();
+        
+        if( count($slider['slides'])>0 )
+            foreach($slider['slides'] as $slide)
+                $slide['media'] = $this->mediaService->getMediaFilteredById($slide->media_id);
+        
+                
         return $this->sendSuccess($slider);
     }
 

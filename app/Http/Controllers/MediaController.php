@@ -65,7 +65,6 @@ class MediaController extends Controller
     public function index()
     {
         $allMedia = Media::where('trashed',0)->orderBy('id','desc')->get();
-        return $this->utilityService->is200ResponseWithData("Success",$allMedia);
         return $this->sendSuccess($allMedia);
     }
 
@@ -91,14 +90,11 @@ class MediaController extends Controller
         
         if( $file->move($path,$fileNewName) ){
             if( $media->save() ){
-                return $this->utilityService->is200ResponseWithData(
-                    "Successfully Uploaded File!",
-                    $media
-                );
+                return $this->sendSuccess($media);
             }
-            return $this->utilityService->is500Response("Internal Server Error!");
+            return $this->sendFailure(500,"DB Failure!");
         }
-        return $this->utilityService->is500Response("Upload Failed!");
+        return $this->sendFailure(500,"Upload Failed");;
     }
 
 
@@ -120,9 +116,9 @@ class MediaController extends Controller
             $media->title = $request->title;
             $media->alt = $request->alt;
             $media->save();
-            return $this->utilityService->is200Response("Saved!");
+            return $this->sendSuccess($media);
         }
-        return $this->utilityService->is422Response("File Not Found");
+        return $this->sendFailure(404);
     }
 
 

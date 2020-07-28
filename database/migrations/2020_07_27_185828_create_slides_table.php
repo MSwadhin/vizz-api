@@ -17,8 +17,9 @@ class CreateSlidesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('slider_id');
             $table->unsignedBigInteger('media_id');
+            $table->integer('order')->default(100000);
             $table->string('name');
-            $table->string('text',500);
+            $table->string('text',500)->nullable();
             $table->foreign('slider_id')->references('id')->on('sliders');
             $table->foreign('media_id')->references('id')->on('media');
             $table->timestamps();
