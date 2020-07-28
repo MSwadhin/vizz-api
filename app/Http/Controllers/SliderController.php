@@ -20,7 +20,7 @@ class SliderController extends Controller
     public function index(){
 
         $sliders = Slider::where('trashed',0)->orderBy('id','desc')->get();
-        return response()->json( $sliders );
+        return $this->sendSuccess($sliders);
 
     }
 

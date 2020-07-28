@@ -1,7 +1,6 @@
 <?php
 
 
-
 $router->get('/', function () use ($router) {
     return "Why You Are Here???";
 });
@@ -112,5 +111,52 @@ $router->group(
         $router->post('create','TeamMemberController@store');
         $router->post('update/{id}','TeamMemberController@update');
         $router->post('trash/{id}','TeamMemberController@destroy');
+    }
+);
+
+
+/**
+ * 
+ * Client Routes
+ */
+$router->group(
+    ['prefix'=>'client'],
+    function() use($router){
+        $router->get('all','ClientController@index');
+        $router->get('show/{id}','ClientController@show');
+        $router->post('create','ClientController@store');
+        $router->post('trash/{id}','ClientController@destroy');
+    }
+);
+
+
+/**
+ * 
+ * FAQ Routes
+ */
+$router->group(
+    ['prefix'=>'faq'],
+    function() use ($router){
+        $router->get('all','FAQController@index');
+        $router->get('show/{id}','FAQController@show');
+        $router->post('create','FAQController@store');
+        $router->post('update/{id}','FAQController@update');
+        $router->post('trash/{id}','FAQController@destroy');
+    }
+);
+
+
+/**
+ * 
+ * Story Routes
+ */
+$router->group(
+    ['prefix'=>'story'],
+    function() use ($router){
+        $router->get('all','StoryController@index');
+        $router->get('show/{id}','StoryController@show');
+        $router->post('create','StoryController@store');
+        $router->post('update/{id}','StoryController@update');
+        $router->post('trash/{id}','StoryController@destroy');
     }
 );

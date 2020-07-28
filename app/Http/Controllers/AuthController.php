@@ -29,7 +29,9 @@ class AuthController extends Controller
         $creds = $request->only('email','password');
         if( ! $token = Auth::guard('api')->attempt($creds) ){
             $responseMessage = "invalid username or password";
-            return $this->utilityService->is422Response($responseMessage);
+            return $this->sendFailure(422,[
+                $responseMessage
+            ]);
         }
         return $this->respondWithToken($token);
     }
@@ -37,7 +39,7 @@ class AuthController extends Controller
     public function logout(){
         Auth::guard('api')->logout();
         $responseMessage = "successfully logged out";
-        return  $this->utilityService->is200Response($responseMessage);
+        return  $this->sendSuccess($responseMessage);
     }
 
 

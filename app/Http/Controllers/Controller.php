@@ -12,7 +12,7 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
 
-    protected $utilityService;
+    // protected $utilityService;
     protected $responseService;
     protected $mediaService;
 
@@ -24,7 +24,7 @@ class Controller extends BaseController
                 'except'=> $publicRoutes
             ]
         );
-        $this->utilityService = new UtilityService;
+        // $this->utilityService = new UtilityService;
         $this->responseService = new ResponseService;
         $this->mediaService = new MediaService;
     }

@@ -22,7 +22,7 @@ class TeamMemberController extends Controller
         $member->name = $request->name;
         $member->designation = $request->designation;
         $member->media_id = $request->media_id;
-        $member->order = ( $request->has('order') && is_int($request->order)) ? $request->order : 100000;
+        $member->order = ( $request->has('order') && trim($request->order)!="" ) ? $request->order : 100000;
         $member->facebook = ( $request->has('facebook') ) ? $request->facebook : "";
         $member->twitter = ( $request->has('twitter') ) ? $request->facebook : "";
         $member->linkedin = ( $request->has('linkedin') ) ? $request->facebook : "";

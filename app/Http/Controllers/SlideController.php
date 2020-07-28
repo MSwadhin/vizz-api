@@ -41,7 +41,7 @@ class SlideController extends Controller
         $slide->name = $request->name;
         $slide->slider_id = $request->slider_id;
         $slide->media_id = $request->media_id;
-        if( $request->has('order')  && is_int($request->order) ){
+        if( ( $request->has('order') && trim($request->order)!="" ) ){
             $slide->order = $request->order;
         }
         $slide->save();
@@ -79,7 +79,7 @@ class SlideController extends Controller
         $slide->name = $request->name;
         $slide->slider_id = $request->slider_id;
         $slide->media_id = $request->media_id;
-        if( $request->has('order') && is_int($request->order) ){
+        if( ( $request->has('order') && trim($request->order)!="" ) ){
             $slide->order = $request->order;
         }
         else $slide->order = 100000;
