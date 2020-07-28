@@ -11,7 +11,6 @@ class Slider extends Model
     protected $fillable = [
         'name','trashed'
     ];
-
     public function slides(){
         $this->hasMany('App\Slide','slider_id')->where('trashed',0);
     }

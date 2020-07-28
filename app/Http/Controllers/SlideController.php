@@ -14,14 +14,12 @@ class SlideController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private $mediaService;
 
     public function __construct()
     {
         parent::__construct(
             ['index','show']
         );
-        $this->mediaService = new MediaService;
     }
 
     public function index()

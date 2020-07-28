@@ -99,3 +99,18 @@ $router->group(
     }
 );
 
+
+/**
+ * 
+ * Team Routes
+ */
+$router->group(
+    ['prefix'=>'team'],
+    function() use ($router){
+        $router->get('all','TeamMemberController@index');
+        $router->get('show/{id}','TeamMemberController@show');
+        $router->post('create','TeamMemberController@store');
+        $router->post('update/{id}','TeamMemberController@update');
+        $router->post('trash/{id}','TeamMemberController@destroy');
+    }
+);

@@ -9,15 +9,12 @@ use Illuminate\Http\Request;
 
 class SliderController extends Controller
 {
-    //
-    private $mediaService;
 
     public function __construct()
     {
         parent::__construct(
             ['index','show']
         );
-        $this->mediaService = new MediaService;
     }
 
     public function index(){

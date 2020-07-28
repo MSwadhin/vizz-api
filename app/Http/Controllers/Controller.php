@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\MediaService;
 use App\Http\Services\UtilityService;
 use App\Http\Services\ResponseService;
 use Illuminate\Auth\Access\Response;
@@ -13,6 +14,7 @@ class Controller extends BaseController
 
     protected $utilityService;
     protected $responseService;
+    protected $mediaService;
 
     public function __construct($publicRoutes)
     {
@@ -24,6 +26,7 @@ class Controller extends BaseController
         );
         $this->utilityService = new UtilityService;
         $this->responseService = new ResponseService;
+        $this->mediaService = new MediaService;
     }
     
     //
