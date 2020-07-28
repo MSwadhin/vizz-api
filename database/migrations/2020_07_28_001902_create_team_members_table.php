@@ -17,12 +17,14 @@ class CreateTeamMembersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('designation');
+            $table->unsignedBigInteger('media_id');
             $table->string('facebook',500)->nullable();
             $table->string('twitter',500)->nullable();
             $table->string('instagram',500)->nullable();
             $table->string('linkedin',500)->nullable();
             $table->string('youtube',500)->nullable();
             $table->boolean('trashed')->default(0);
+            $table->foreign('media_id')->references('id')->on('media');
             $table->timestamps();
         });
     }

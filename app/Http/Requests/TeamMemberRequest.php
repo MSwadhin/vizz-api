@@ -18,7 +18,8 @@ class TeamMemberRequest extends FormRequest{
     {
         return [
             'name'=>'required|max:200|unique:team_members',
-            'designation'=>'required|max:200'
+            'designation'=>'required|max:200',
+            'media_id' => 'required|exists:media,id'
         ];
     }
 
@@ -27,7 +28,9 @@ class TeamMemberRequest extends FormRequest{
         return [
             'name.required' => 'Please Give A Name',
             'name.max' => 'Name Can Not Be Longer Than 200 Characters',
-            'designation' => 'Team Member Designation is Required'
+            'designation' => 'Team Member Designation is Required',
+            'media_id.required' => 'Please Select A Photo',
+            'media_id.exists' => 'Invalid Photo'
         ];
     }
     

@@ -21,6 +21,7 @@ class TeamMemberController extends Controller
     private function getTeamMember(TeamMember &$member, TeamMemberRequest $request){
         $member->name = $request->name;
         $member->designation = $request->designation;
+        $member->media_id = $request->media_id;
         $member->facebook = ( $request->has('facebook') ) ? $request->facebook : "";
         $member->twitter = ( $request->has('twitter') ) ? $request->facebook : "";
         $member->linkedin = ( $request->has('linkedin') ) ? $request->facebook : "";
@@ -37,6 +38,11 @@ class TeamMemberController extends Controller
     public function index()
     {
         $team = TeamMember::where('trashed',0)->orderBy('id','desc')->get();
+        if( count($team)>0 ){
+            foreach( $team as $member ){
+                $member['media'] = $this->mediaService->getMediaFilteredById($member->media_id);
+            }
+        }
         return $this->sendSuccess($team);
     }
 
@@ -51,6 +57,7 @@ class TeamMemberController extends Controller
         $newMember = new TeamMember;
         $this->getTeamMember($newMember,$request);
         $newMember->save();
+        $newMember['media'] = $this->mediaService->getMediaFilteredById($newMember->media_id);
         return $this->sendSuccess($newMember);
     }
 
@@ -64,6 +71,7 @@ class TeamMemberController extends Controller
     {
         $member = TeamMember::find($id);
         if ( empty($member) || $member==null )return $this->sendFailure(404);
+        $member['media'] = $this->mediaService->getMediaFilteredById($member->media_id);
         return $this->sendSuccess($member);
     }
 
@@ -74,12 +82,13 @@ class TeamMemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TeamMemberRequest $request, $id)
     {
         $member = TeamMember::find($id);
         if( empty($member) || $member==null )return $this->sendFailure(404);
         $this->getTeamMember($member,$request);
-        $member->asve();
+        $member->save();
+        $member['media'] = $this->mediaService->getMediaFilteredById($member->media_id);
         return $this->sendSuccess($member);
     }
 
