@@ -2,7 +2,7 @@
 
 
 $router->get('/', function () use ($router) {
-    return "Why You Are Here???";
+    return "Vizz API version:2.0.0";
 });
 
 
@@ -158,5 +158,34 @@ $router->group(
         $router->post('create','StoryController@store');
         $router->post('update/{id}','StoryController@update');
         $router->post('trash/{id}','StoryController@destroy');
+    }
+);
+
+/**
+ * 
+ * Service Routes
+ */
+$router->group(
+    ['prefix'=>'service'],
+    function() use ($router){
+        $router->get('all','ServiceController@index');
+        $router->get('show/{id}','ServiceController@show');
+        $router->post('create','ServiceController@store');
+        $router->post('update/{id}','ServiceController@update');
+        $router->post('trash/{id}','ServiceController@destroy');
+    }
+);
+
+
+/**
+ * 
+ * SubService Routes
+ */
+$router->group(
+    ['prefix'=>'service/child'],
+    function() use ($router){
+        $router->post('create','SubServiceController@store');
+        $router->post('update/{id}','SubServiceController@update');
+        $router->post('trash/{id}','SubServiceController@destroy');
     }
 );
