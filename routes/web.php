@@ -189,3 +189,35 @@ $router->group(
         $router->post('trash/{id}','SubServiceController@destroy');
     }
 );
+
+
+/**
+ * 
+ * Tags Routes
+ */
+$router->group(
+    ['prefix'=>'tag'],
+    function() use ($router){
+        $router->get('all','TagController@index');
+        $router->post('create','TagController@store');
+        $router->post('update/{id}','TagController@update');
+        $router->post('trash/{id}','TagController@destroy');
+    }
+);
+
+/**
+ * 
+ * Post Routes
+ */
+$router->group(
+    ['prefix'=>'post'],
+    function() use ($router){
+        $router->get('all','PostController@index');
+        $router->get('show/{id}','PostController@show');
+        $router->post('author','PostController@byAuthor');
+        $router->get('tag/{tagId}','PostController@byTag');
+        $router->post('create','PostController@store');
+        $router->post('update/{id}','PostController@update');
+        $router->post('trash/{id}','PostController@destroy');
+    }
+);
