@@ -221,3 +221,21 @@ $router->group(
         $router->post('trash/{id}','PostController@destroy');
     }
 );
+
+
+/**
+ * 
+ * Testimonial Routes
+ */
+$router->group(
+    ['prefix'=>'testimonial'],
+    function() use ($router){
+        $router->get('all','TestimonialController@index');
+        $router->get('show/{id}','TestimonialController@show');
+        $router->post('create','TestimonialController@store');
+        $router->post('update/{id}','TestimonialController@update');
+        $router->post('trash/{id}','TestimonialController@destroy');
+    }
+);
+
+
