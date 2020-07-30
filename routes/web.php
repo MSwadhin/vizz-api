@@ -239,3 +239,19 @@ $router->group(
 );
 
 
+/**
+ * 
+ * Project Routes
+ */
+$router->group(
+    ['prefix'=>'project'],
+    function() use ($router){
+        $router->get('all','ProjectController@index');
+        $router->get('show/{id}','ProjectController@show');
+        $router->post('create','ProjectController@store');
+        $router->post('update/{id}','ProjectController@update');
+        $router->post('trash/{id}','ProjectController@destroy');
+    }
+);
+
+
