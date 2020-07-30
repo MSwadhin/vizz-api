@@ -1,0 +1,16 @@
+on: push
+name: Publish API on Live Server
+jobs:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Vizz-Api
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.1.0
+      with:
+        fetch-depth: 2
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      with:
+        ftp-server: ftp://vizzarch.com/api.vizzarch.com/public
+        ftp-username: mujahid@vizzarch.com
+        ftp-password: ${{ secrets.viz_ftp_pass }}
