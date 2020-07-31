@@ -255,3 +255,18 @@ $router->group(
 );
 
 
+/**
+ * 
+ * Subscriber Routes
+ */
+$router->group(
+    ['prefix'=>'subs'],
+    function() use ($router){
+        $router->get('all','SubscriberController@index');
+        $router->post('new','SubscriberController@store');
+        $router->post('send','SubscriberController@send');
+        $router->post('trash/{id}','SubscriberController@destroy');
+    }
+);
+
+
