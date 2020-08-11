@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BulkFileUploadRequest;
+use App\Http\Requests\BulkTrashRequest;
 use Illuminate\Http\Request;
 use App\Media;
 use App\Http\Requests\FileUploadRequest;
@@ -64,7 +65,7 @@ class MediaController extends Controller
     */
     public function index()
     {
-        $allMedia = Media::where('trashed',0)->orderBy('id','desc')->get();
+        $allMedia = Media::where('trashed',0)->orderBy('updated_at','desc')->get();
         return $this->sendSuccess($allMedia);
     }
 
@@ -150,7 +151,7 @@ class MediaController extends Controller
 
     // gets files which are in trash
     public function get_trash( Request $request ){
-        $media = Media::where('trashed',1)->orderBy('id','desc')->get();
+        $media = Media::where('trashed',1)->orderBy('updated_at','desc')->get();
         return $this->sendSuccess($media);
     }
 
@@ -194,5 +195,19 @@ class MediaController extends Controller
         return $this->sendSuccess([
             'Falis ' => $fail
         ]);
+    
+    
+    }
+
+
+    public function bulkTrash(BulkTrashRequest $request){
+        $ids = $request->items;
+        $media = Media::whereIn('id',$ids)->get();
+        // return $this->sendSuccess($media);
+        foreach( $media as $curMedia ){
+            $curMedia->trashed = 1;
+            $curMedia->save();
+        }
+        return $this->sendSuccess("Successfully Moved to Trash");
     }
 }

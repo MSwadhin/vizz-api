@@ -28,8 +28,8 @@ class AuthController extends Controller
     public function login(UserLoginRequest $request){
         $creds = $request->only('email','password');
         if( ! $token = Auth::guard('api')->attempt($creds) ){
-            $responseMessage = "invalid username or password";
-            return $this->sendFailure(422,[
+            $responseMessage = "Invalid email or password !";
+            return $this->sendFailure(401,[
                 $responseMessage
             ]);
         }
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
     public function logout(){
         Auth::guard('api')->logout();
-        $responseMessage = "successfully logged out";
+        $responseMessage = "Successfully Logged Out";
         return  $this->sendSuccess($responseMessage);
     }
 
