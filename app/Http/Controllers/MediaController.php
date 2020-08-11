@@ -24,18 +24,25 @@ class MediaController extends Controller
         );
     }
 
+    
+
+    function public_path($path = null){
+        return rtrim(app()->basePath('public/' . $path), '/');
+    }
+
+
     /* 
     *
     * Utility Functions
     *
     */ 
     private function getFileType( $fileExtension ){
-        if( $fileExtension=="jpg" )return "image";
-        if( $fileExtension=="jpeg" )return "image";
-        if( $fileExtension=="png" )return "image";
-        if( $fileExtension=="svg" )return "image";
-        if( $fileExtension=="ai" )return "image";
-        if( $fileExtension=="ps" )return "image";
+        if( strtolower($fileExtension)=="jpg" )return "image";
+        if( strtolower($fileExtension)=="jpeg" )return "image";
+        if( strtolower($fileExtension)=="png" )return "image";
+        if( strtolower($fileExtension)=="svg" )return "image";
+        if( strtolower($fileExtension)=="ai" )return "image";
+        if( strtolower($fileExtension)=="ps" )return "image";
         return "doc";
     }
     private function uploadFile($file,$type){
@@ -151,7 +158,7 @@ class MediaController extends Controller
 
     // gets files which are in trash
     public function get_trash( Request $request ){
-        $media = Media::where('trashed',1)->orderBy('updated_at','desc')->get();
+        $media = Media::where('trashed',1)->where('deleted',0)->orderBy('updated_at','desc')->get();
         return $this->sendSuccess($media);
     }
 
@@ -180,16 +187,20 @@ class MediaController extends Controller
 
     // clears the trash and deletes all trashed files from uploads folder
     public function clearTrash(){
-        $trashbin = Media::where('trashed',true)->get();
+        $trashbin = Media::where('trashed',true)->where('deleted',0)->get();
         $fail = 0;
         $suc = 0;
         if( !empty($trashbin) && count($trashbin)>0 ){
             foreach($trashbin as $media){
-                if( unlink( $media->path ) ){
-                    Media::destroy($media->id);
+
+                $filePath = $this->public_path($media->path);
+                if( file_exists($filePath) && unlink( $filePath ) ){
                     $suc++;
                 }
                 else $fail++;
+                $media->trashed = 1;
+                $media->deleted = 1;
+                $media->save();
             }
         }
         return $this->sendSuccess([

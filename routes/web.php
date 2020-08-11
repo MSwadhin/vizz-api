@@ -38,6 +38,7 @@ $router->group(
         $router->post('bulkUpload','MediaController@bulkUpload');
         $router->post('clearTrash','MediaController@clearTrash');
         $router->post('bulkRestore/{ids}','MediaController@restore2');
+        $router->post('restore/{id}','MediaController@restore');
         $router->post('bulkTrash','MediaController@bulkTrash');
     }
 );
