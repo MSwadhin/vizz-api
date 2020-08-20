@@ -21,7 +21,7 @@ class MediaService{
 
     public function getMediaFilteredById($id){
         $media = Media::find($id);
-        if( empty($media) || $media->deleted==true){
+        if( empty($media) || $media->deleted ){
             $newMedia = new Media;
             $newMedia->name = "Deleted";
             $newMedia->path = "/uploads/deleted.jpg";

@@ -35,21 +35,21 @@ class SliderController extends Controller
         if( count($slider['slides'])>0 )
             foreach($slider['slides'] as $slide)
                 $slide['media'] = $this->mediaService->getMediaFilteredById($slide->media_id);
-        
+
                 
         return $this->sendSuccess($slider);
     }
 
     public function store(Request $request){
         if( !$request->has('name') || trim($request->name)=="" )return $this->sendFailure(422,['name'=>'You must give a name to the slider']);
-        $existingSlider = Slider::where('name',$request->name)->get();
+        $existingSlider = Slider::where('name',$request->name)->where('trashed',0)->get();
         if( count($existingSlider)>0 ){
             return $this->sendFailure(422,['name'=>'Slider Name Already Exists']);
         }
         $slider = new Slider;
         $slider->name = $request->name;
         $slider->save();
-        return $this->sendSuccess(['slider_id'=>$slider->id]);
+        return $this->sendSuccess($slider);
     }
 
     public function update(Request $request,$id){
@@ -58,7 +58,7 @@ class SliderController extends Controller
         if(empty($slider))return $this->sendFailure(404);
         $slider->name = $request->name;
         $slider->save();
-        return $this->sendSuccess();
+        return $this->sendSuccess( $slider );
     }
 
     public function destroy($id){

@@ -44,7 +44,7 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {   
-        if( Category::where('name',$request->name)->count() > 0 ){
+        if( Category::where('name',$request->name)->where('trashed',0)->count() > 0 ){
             return $this->sendFailure(422,[
                 'name' => 'Category Name Already Exists!'
             ]);
@@ -80,7 +80,7 @@ class CategoryController extends Controller
     {   
         
         $category = Category::find( $id );
-        $cnt = Category::where('id','!=',$id)->where('name',$request->name)->count();
+        $cnt = Category::where('id','!=',$id)->where('name',$request->name)->where('trashed',0)->count();
         if( $cnt>0 ){
             return $this->sendFailure(
                 422,[
