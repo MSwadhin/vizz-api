@@ -42,6 +42,7 @@ class SliderController extends Controller
 
     public function store(Request $request){
         if( !$request->has('name') || trim($request->name)=="" )return $this->sendFailure(422,['name'=>'You must give a name to the slider']);
+        if( strlen($request->name) > 200 )return $this->sendFailure(422,['name'=>'Slider Name Can Not Be Longer Than 200 Characters']);
         $existingSlider = Slider::where('name',$request->name)->where('trashed',0)->get();
         if( count($existingSlider)>0 ){
             return $this->sendFailure(422,['name'=>'Slider Name Already Exists']);
@@ -54,6 +55,7 @@ class SliderController extends Controller
 
     public function update(Request $request,$id){
         if( !$request->has('name') )return $this->sendFailure(422,['name'=>'You must give a name to the slider']);
+        if( strlen($request->name) > 200 )return $this->sendFailure(422,['name'=>'Slider Name Can Not Be Longer Than 200 Characters']);
         $slider = Slider::find($id);
         if(empty($slider))return $this->sendFailure(404);
         $slider->name = $request->name;

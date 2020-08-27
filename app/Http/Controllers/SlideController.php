@@ -41,6 +41,7 @@ class SlideController extends Controller
         $slide->name = $request->name;
         $slide->slider_id = $request->slider_id;
         $slide->media_id = $request->media_id;
+        $slide->text = $request->text;
         if( ( $request->has('order') && trim($request->order)!="" ) ){
             $slide->order = $request->order;
         }
@@ -79,6 +80,7 @@ class SlideController extends Controller
         $slide->name = $request->name;
         $slide->slider_id = $request->slider_id;
         $slide->media_id = $request->media_id;
+        $slide->text = $request->text;
         if( ( $request->has('order') && trim($request->order)!="" ) ){
             $slide->order = $request->order;
         }
