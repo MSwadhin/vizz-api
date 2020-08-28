@@ -121,6 +121,7 @@ class ProjectController extends Controller
         $project = Project::find($id);
         if( empty($project) )return $this->sendFailure(404);
         $project->trashed = 1;
+        $project->name = 'trashed';
         $project->save();
         return $this->sendSuccess();
     }

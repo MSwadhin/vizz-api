@@ -31,8 +31,11 @@ class ProjectRequest extends FormRequest{
             'linkedin' => 'max:250',
             'youtube' => 'max:250',
             'instagram' => 'max:250',
-            'cats' => 'array|required',
-            'cats.*' => 'exists:categories,id|numeric'
+            'cats' => 'array',
+            'cats.*' => 'exists:categories,id|numeric',
+            'bd_img' => 'required|exists:media,id',
+            'bd_title' => 'required|max:200|min:1',
+            'meta' => 'max:3000'
         ];
     }
 
