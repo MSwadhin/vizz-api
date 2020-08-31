@@ -29,6 +29,7 @@ class SliderController extends Controller
         if( empty($slider) )return $this->sendFailure(404);
         $slider['slides'] = Slide::where('slider_id',$id)
                                     ->orderBy('order','asc')
+                                    ->orderBy('name','asc')
                                     ->orderBy('id','desc')
                                     ->get();
         

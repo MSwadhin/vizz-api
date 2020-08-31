@@ -29,7 +29,8 @@ class ProjectController extends Controller
         return $project;
     }
     private function withMedia(Project $project){
-        $project['bg-media'] = $this->mediaService->getMediaFilteredById($project->bg_img);;
+        $project['bg-media'] = $this->mediaService->getMediaFilteredById($project->bg_img);
+        $project['bd-media'] = $this->mediaService->getMediaFilteredById($project->bd_img);
         $project = $this->thumbWithMedia($project);
         $gallery = $project->gallery;
         $galleryMedia = Media::whereIn('id',$gallery)->where('trashed',0)->get();
@@ -43,7 +44,7 @@ class ProjectController extends Controller
         $project->client = $request->client;
         $project->cd = $request->cd;
         $project->date = $request->date;
-        $project->gallery = ($request->gallery);
+        $project->gallery = ($request->has('gallery') && is_array($request->gallery)) ? $request->gallery : []; 
         $project->ft_img = intval($request->ft_img);
         $project->bg_img = intval($request->bg_img);
         $project->facebook = ($request->has('facebook')) ? $request->facebook : "#";
@@ -51,6 +52,9 @@ class ProjectController extends Controller
         $project->linkedin = ($request->has('linkedin')) ? $request->linkedin : "#";
         $project->youtube = ($request->has('youtube')) ? $request->youtube : "#";
         $project->instagram = ($request->has('instagram')) ? $request->instagram : "#";
+        $project->meta = ($request->has('meta')) ? $request->instagram : "";
+        $project->bd_title = $request->bd_title;
+        $project->bd_img = $request->bd_img;
         $project->save();
 
 
@@ -60,11 +64,13 @@ class ProjectController extends Controller
                 ProjectCategory::destroy($cat->id);
             }
         }
-        foreach( $request->cats as $cat){
-            $pc = new ProjectCategory;
-            $pc->category_id = $cat;
-            $pc->project_id = $project->id;
-            $pc->save();
+        if( $request->has('gallery') && is_array( $request->gallery ) ){
+            foreach( $request->cats as $cat){
+                $pc = new ProjectCategory;
+                $pc->category_id = $cat;
+                $pc->project_id = $project->id;
+                $pc->save();
+            }
         }
 
     }

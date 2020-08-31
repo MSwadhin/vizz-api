@@ -17,13 +17,13 @@ class ProjectRequest extends FormRequest{
     public function rules()
     {
         return [
-            'name'=>'required|max:200',
-            'description'=>'required|max:500',
-            'client'=>'max:200',
-            'cd'=>'max:200',
+            'name'=>'required|max:200|min:1',
+            'description'=>'required|max:500|min:1',
+            'client'=>'required|max:200|min:1',
+            'cd'=>'required|max:200|min:1',
             'ft_img' => 'numeric|required|exists:media,id',
             'bg_img' => 'numeric|required|exists:media,id',
-            'date' => 'required|date',
+            'date' => 'required|max:200',
             'gallery' => 'array',
             'gallery.*' =>'exists:media,id|numeric',
             'facebook' => 'max:250',
@@ -35,7 +35,7 @@ class ProjectRequest extends FormRequest{
             'cats.*' => 'exists:categories,id|numeric',
             'bd_img' => 'required|exists:media,id',
             'bd_title' => 'required|max:200|min:1',
-            'meta' => 'max:3000'
+            'meta' => 'max:5000'
         ];
     }
 
