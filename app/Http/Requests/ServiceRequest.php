@@ -17,8 +17,8 @@ class ServiceRequest extends FormRequest{
     public function rules()
     {
         return [
-            'title'=>'required|max:200',
-            'description'=>'required|max:1500',
+            'title'=>'required|max:200|min:4',
+            'description'=>'required|max:1500|min:4',
             'ft_img' => 'required|exists:media,id',
             'button_link'=>'max:500',
             'order'=>'numeric|max:100000000|min:-100000000'
