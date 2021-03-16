@@ -15,8 +15,8 @@ class CreateSubservicesTable extends Migration
     {
         Schema::create('subservices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title',200);
-            $table->string('description',500);
+            $table->string('title',1000);
+            $table->string('description',1500);
             $table->unsignedBigInteger('icon');
             $table->unsignedBigInteger('service_id');
             $table->boolean('trashed')->default(0);

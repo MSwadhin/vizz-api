@@ -44,8 +44,11 @@ class SubServiceController extends Controller
 
     public function show($id)
     {
-        // Intentinally Left Blank
-        // No Need to Implement For The Current Version
+        $service = SubService::find($id);
+        if( empty($service) )return $this->sendFailure(404);
+        $iconId = $service->icon;
+        $service->icon = $this->mediaService->getMediaFilteredById($iconId);
+        return $this->sendSuccess($service);
     }
 
     public function update(SubServiceRequest $request, $id)

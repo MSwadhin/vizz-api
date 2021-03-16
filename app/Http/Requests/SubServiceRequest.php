@@ -17,8 +17,8 @@ class SubServiceRequest extends FormRequest{
     public function rules()
     {
         return [
-            'title'=>'required|max:200',
-            'description'=>'required|max:500',
+            'title'=>'required|max:1000',
+            'description'=>'required|max:1500',
             'icon' => 'required|numeric|exists:media,id',
             'service_id' => 'required|numeric|exists:services,id'
         ];
@@ -27,12 +27,12 @@ class SubServiceRequest extends FormRequest{
     public function messages()
     {
         return [
-            'title.required' => 'Please Give A Name',
-            'title.max' => 'Name Can Not Be Longer Than 200 Characters',
+            'title.required' => 'Please Give A Title',
+            'title.max' => 'Title Can Not Be Longer Than 1000 Characters',
             'description.required' => 'Please Give A Description',
-            'description.max' => 'Description Can Not Be Longer Than 500 Characters',
-            'icon.required' => 'Please Select A Photo',
-            'icon.exists' => 'Invalid Photo',
+            'description.max' => 'Description Can Not Be Longer Than 1500 Characters',
+            'icon.required' => 'Please Select an Icon',
+            'icon.exists' => 'Invalid Icon',
             'service_id.required' => 'Please Select A Service First',
             'service_id.exists' => 'Invalid Service'
         ];

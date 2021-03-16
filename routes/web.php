@@ -189,6 +189,7 @@ $router->group(
         $router->post('create','SubServiceController@store');
         $router->post('update/{id}','SubServiceController@update');
         $router->post('trash/{id}','SubServiceController@destroy');
+        $router->get('show/{id}','SubServiceController@show');
     }
 );
 
